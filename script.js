@@ -1,23 +1,42 @@
+// Wait until the HTML document is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Get the chessboard container element
     const chessboard = document.getElementById('chessboard');
-    
-    // Loop to create 8x8 chessboard tiles
+
+    // Define the starting positions of major pieces (rooks, knights, etc.)
+    const blackMajorPieces = ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'];
+    const whiteMajorPieces = ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖'];
+
+    // Create an 8x8 chessboard
     for (let row = 0; row < 8; row++) {
         for (let col = 0; col < 8; col++) {
-            const tile = document.createElement('div'); // Creates a new tile
-            tile.classList.add('tile'); // Adds the 'tile' class
+            // Create a tile (square) for each position
+            const tile = document.createElement('div');
+            tile.classList.add('tile');
             
-            // Alternates between black and white tiles
-            if ((row + col) % 2 === 0) {
-                tile.classList.add('white-tile');
-            } else {
-                tile.classList.add('black-tile');
-            }
+            // Alternate between white and black tiles
+            tile.classList.add((row + col) % 2 === 0 ? 'white-tile' : 'black-tile');
             
-            tile.id = ${row}-${col}; // Gives each tile a unique ID (e.g., "0-0", "3-4")
-            chessboard.appendChild(tile); // Adds the tile to the chessboard
+            // Give each tile a unique ID (e.g., "0-0" to "7-7")
+            tile.id = ${row}-${col};
+
+            // Place pieces on their starting positions
+            if (row === 0) {
+                // Black back row (rooks, knights, bishops, etc.)
+                tile.textContent = blackMajorPieces[col];
+            } else if (row === 1) {
+                // Black pawns
+                tile.textContent = '♟';
+            } else if (row === 6) {
+                // White pawns
+                tile.textContent = '♙';
+            } else if (row === 7) {
+                // White back row
+                tile.textContent = whiteMajorPieces[col];
         }
-    }
-    
-    // TODO: Add chess pieces and movement logic later
+
+            // Add the tile to the chessboard
+            chessboard.appendChild(tile);
+        }
+    }
 });
