@@ -1,42 +1,64 @@
-// Wait until the HTML document is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // Get the chessboard container element
     const chessboard = document.getElementById('chessboard');
 
-    // Define the starting positions of major pieces (rooks, knights, etc.)
-    const blackMajorPieces = ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'];
-    const whiteMajorPieces = ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖'];
+    // Chess piece Unicode symbols
+    const blackPieces = ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'];
+    const whitePieces = ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖'];
 
-    // Create an 8x8 chessboard
+    // Create the chessboard
     for (let row = 0; row < 8; row++) {
         for (let col = 0; col < 8; col++) {
-            // Create a tile (square) for each position
             const tile = document.createElement('div');
             tile.classList.add('tile');
-            
-            // Alternate between white and black tiles
             tile.classList.add((row + col) % 2 === 0 ? 'white-tile' : 'black-tile');
-            
-            // Give each tile a unique ID (e.g., "0-0" to "7-7")
             tile.id = ${row}-${col};
 
-            // Place pieces on their starting positions
-            if (row === 0) {
-                // Black back row (rooks, knights, bishops, etc.)
-                tile.textContent = blackMajorPieces[col];
-            } else if (row === 1) {
-                // Black pawns
-                tile.textContent = '♟';
-            } else if (row === 6) {
-                // White pawns
-                tile.textContent = '♙';
-            } else if (row === 7) {
-                // White back row
-                tile.textContent = whiteMajorPieces[col];
-        }
+            // Place pieces on the board
+            if (row === 0) tile.textContent = blackPieces[col];       // Black back row
+            else if (row === 1) tile.textContent = '♟';              // Black pawns
+            else if (row === 6) tile.textContent = '♙';               // White pawns
+            else if (row === 7) tile.textContent = whitePieces[col];  // White back row
 
-            // Add the tile to the chessboard
+            // Make tiles draggable
+            tile.setAttribute('draggable', true);
+            
+            // Add event listeners for drag and drop
+            tile.addEventListener('dragstart', dragStart);
+            tile.addEventListener('dragover', dragOver);
+            tile.addEventListener('drop', dragDrop);
+
             chessboard.appendChild(tile);
-        }
-    }
+        }
+    }
+
+    // Store the dragged piece
+    let draggedPiece = null;
+
+    function dragStart(e) {
+        draggedPiece = e.target;
+        e.dataTransfer.setData('text/plain', e.target.id);
+    }
+
+    function dragOver(e) {
+        e.preventDefault(); // Necessary to allow dropping
+    }
+
+    function dragDrop(e) {
+        e.preventDefault();
+        const targetTile = e.target;
+        
+        // Only move if target is empty or contains opponent's piece
+        if (targetTile.textContent === '' || 
+            isOpponentPiece(draggedPiece.textContent, targetTile.textContent)) {
+            targetTile.textContent = draggedPiece.textContent;
+            draggedPiece.textContent = '';
+        }
+    }
+
+    function isOpponentPiece(piece1, piece2) {
+        // Check if one piece is white and the other is black
+        return (piece1 === piece1.toUpperCase() && piece2 === piece2.toLowerCase()) ||
+               (piece1 === piece1.toLowerCase() && piece2 === piece2.toUpperCase());
+    }
 });
+    
