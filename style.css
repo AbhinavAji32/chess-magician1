@@ -1,0 +1,21 @@
+#chessboard {
+    display: grid; /* Uses CSS Grid layout */
+    grid-template-columns: repeat(8, 60px); /* 8 columns, each 60px wide */
+    grid-template-rows: repeat(8, 60px);    /* 8 rows, each 60px tall */
+    width: 480px;  /* Total width (8 columns × 60px) */
+    height: 480px; /* Total height (8 rows × 60px) */
+    background-color: blue; /* Fallback color (if tiles fail) */
+}
+
+#chessboard .tile {
+    width: 60px;
+    height: 60px;
+}
+
+#chessboard .black-tile {
+    background-color: #779556; /* Dark green (like a real chessboard) */
+}
+
+#chessboard .white-tile {
+    background-color: #ebecd0; /* Light beige (like a real chessboard) */
+}
